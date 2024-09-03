@@ -1,11 +1,12 @@
-from rest_framework import generics
-from .models import User
-from .serializers import UserSerializer
+from rest_framework import generics, permissions
+from api.models.users_models import User
+from api.serializers.users_serializers import UserSerializer
 from django.db import connection
 
 class UserListCreateAPIView(generics.ListCreateAPIView):
-    queryset = User.objects.raw('SELECT * FROM get_users()')
+    queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
         with connection.cursor() as cursor:
